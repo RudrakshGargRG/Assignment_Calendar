@@ -1,52 +1,45 @@
-
 import React, { useRef, useEffect, useState } from 'react';
 import Month from './Month';
 import Day from './Day';
 import '../styles/Calendar.css';
 
 const Calendar = () => {
+  // Initializations
   const currentDate = new Date();
   const currentMonthRef = useRef(null);
-  const [selectedDate, setSelectedDate] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState(currentDate.getMonth());
   const [events, setEvents] = useState({});
 
+  // Effect to scroll to the current month on initial load or when month changes
   useEffect(() => {
-    // Scroll to the current month upon initial load
     if (currentMonthRef.current) {
       currentMonthRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
   }, [selectedMonth]);
 
+  // Check if a given month is the currently selected month
   const isCurrentMonth = (monthOffset) => currentDate.getMonth() + monthOffset === selectedMonth;
+
+  // Get the name of a month based on its index
   const getMonthName = (monthIndex) => {
     const monthDate = new Date(currentDate.getFullYear(), monthIndex, 1);
     return monthDate.toLocaleDateString('default', { month: 'long' });
   };
 
+  // Handle month change in the dropdown
   const handleMonthChange = (e) => {
     const selectedMonth = parseInt(e.target.value, 10);
-    const currentYear = currentDate.getFullYear();
-  
-    // Calculate the options dynamically based on the rendered months
-    const renderedMonths = Array.from({ length: 13 }).map((_, index) => {
-      const monthOffset = index - 6;
-      return new Date(currentYear, selectedMonth + monthOffset, 1);
-    });
-  
-    // Check if the selected month is in the current rendered months
-    const selectedYear = renderedMonths[selectedMonth].getFullYear();
-  
     setSelectedMonth(selectedMonth);
-    setSelectedDate(new Date(selectedYear, selectedMonth, 1));
   };
 
+  // Get a unique identifier for a month
   const getMonthIdentifier = (date) => {
     const year = date.getFullYear();
     const month = date.getMonth() + 1; // Adding 1 because getMonth() returns a zero-based index
     return `${year}-${month.toString().padStart(2, '0')}`;
   };
 
+  // Render days in a month
   const renderDaysInMonth = (monthOffset) => {
     const monthDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + monthOffset, 1);
     const monthIdentifier = getMonthIdentifier(monthDate);
@@ -80,19 +73,23 @@ const Calendar = () => {
     );
   };
 
+  // Check if a given day is the current day
   const isCurrentDay = (monthOffset, day) =>
     currentDate.getMonth() + monthOffset === currentDate.getMonth() && currentDate.getDate() === day;
 
-    const getEventsForDay = (monthIdentifier, day) => {
-        const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
-        return events[monthIdentifier]?.filter((event) => isSameDay(event.date, date)) || [];
-      };
+  // Get events for a specific day
+  const getEventsForDay = (monthIdentifier, day) => {
+    const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+    return events[monthIdentifier]?.filter((event) => isSameDay(event.date, date)) || [];
+  };
 
+  // Handle event click
   const handleEventClick = (event) => {
     // Handle event click (e.g., show event details, allow deletion)
     console.log('Event clicked:', event);
   };
 
+  // Handle adding a new event
   const handleAddEvent = (monthIdentifier, day, title) => {
     const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
     const newEvent = { date, title };
@@ -103,36 +100,37 @@ const Calendar = () => {
     setEvents(updatedEvents);
   };
 
+  // Handle deleting an event
   const handleDeleteEvent = (eventToDelete) => {
     // Filter out the event to delete
     const updatedEvents = events.filter((event) => event !== eventToDelete);
     setEvents(updatedEvents);
   };
 
+  // Check if two dates represent the same day
   const isSameDay = (date1, date2) =>
     date1.getFullYear() === date2.getFullYear() &&
     date1.getMonth() === date2.getMonth() &&
     date1.getDate() === date2.getDate();
 
+  // JSX rendering
   return (
     <div className="calendar-container">
-
-        <div className='header1'>
-            {/* <h1>Event Calendar</h1> */}
-            <div>
-            <label htmlFor="monthSelect">Select Month: </label>
-            <select id="monthSelect" value={selectedMonth} onChange={handleMonthChange}>
+      <div className='header1'>
+        {/* Month selection dropdown */}
+        <div>
+          <label htmlFor="monthSelect">Select Month: </label>
+          <select id="monthSelect" value={selectedMonth} onChange={handleMonthChange}>
             {Array.from({ length: 12 }).map((_, index) => (
-                <option key={index} value={index}>
+              <option key={index} value={index}>
                 {getMonthName(index)}
-                </option>
+              </option>
             ))}
-            </select>
-            </div>
+          </select>
+        </div>
       </div>
       
-
-
+      {/* Calendar rendering */}
       <div className="calendar">
         {Array.from({ length: 13 }).map((_, index) => {
           const monthOffset = index - 6;
@@ -156,4 +154,3 @@ const Calendar = () => {
 };
 
 export default Calendar;
-
