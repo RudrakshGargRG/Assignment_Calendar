@@ -6,8 +6,11 @@ import EventModal from './EventModal';
 const Day = ({ isCurrentDay, day, month, year, events, onEventClick, onAddEvent, onDeleteEvent }) => {
   const [showEventModal, setShowEventModal] = useState(false);
 
+  
   const handleDayClick = () => {
-    if (day > 0) setShowEventModal(true);
+    if (day > 0){
+      setShowEventModal(true);
+    } 
   };
 
   return (

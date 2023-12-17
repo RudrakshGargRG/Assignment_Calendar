@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import '../styles/EventModal.css'; // Make sure to import your EventModal styles
 
 const EventModal = ({ day, month, year, events, onClose, onEventClick, onAddEvent, onDeleteEvent }) => {
   const [eventTitle, setEventTitle] = useState('');
