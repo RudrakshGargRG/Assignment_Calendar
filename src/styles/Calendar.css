@@ -12,9 +12,10 @@
     font-size: 12px;
     z-index: 1;
   }
+  
   .calendar {
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
     overflow-y: scroll;
   }
   
@@ -23,25 +24,26 @@
     padding: 15px;
     border: 1px solid #ccc;
   }
-
-.days {
+  
+  .days {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 5px;
   }
-
   
   .day {
     border: 1px solid #eee;
-    padding: 5px;
+    padding: 10px;
     cursor: pointer;
+    height : 90px;
   }
   
   .day:hover {
     background-color: #f0f0f0;
   }
+  
   .current-day {
-    background-color: #87ceeb; 
+    background-color: #9fcfea;
   }
   
   .weekdays {
@@ -55,8 +57,6 @@
     flex: 0 0 14.28%;
     text-align: center;
   }
-
-  
   
   .close {
     position: absolute;
@@ -65,6 +65,125 @@
     font-size: 20px;
     cursor: pointer;
   }
+  
+  .events {
+    margin-top: 10px;
+    height: 70px;
+    overflow-y: auto;
+    margin-bottom: 5px; 
+  }
+
+  .event {
+    background-color:  #278ec6;
+    color: white;
+    padding: 5px;
+    border-radius: 4px;
+    margin-right: 5px;
+    cursor: pointer;
+    white-space: nowrap;
+    font-size: 12px;
+    max-width: 100px; /* Adjust max-width based on your design */
+    overflow: hidden;
+    text-overflow: ellipsis; 
+  }
+  
+  .event:hover {
+    background-color: #9fcfea;
+  }
+  
+  /* Rest of your existing styles */
+  .calendar-container {
+    text-align: center;
+  }
 
   
+  .event-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    width: 80%;
+    max-width: 500px;
+    margin: auto;
+  }
   
+  .event-modal-content {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .event-modal h2 {
+    margin-bottom: 10px;
+  }
+  
+  .event-modal ol {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .event-modal li {
+    margin-bottom: 10px;
+    cursor: pointer;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .event-modal button {
+    background-color: #ff5c5c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-left: 5px;
+  }
+  
+  .event-modal button:hover {
+    background-color: #ff3333;
+  }
+  
+  .add-event {
+    margin-top: 20px;
+  }
+  
+  .add-event label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .add-event input {
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .add-event button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .add-event button:hover {
+    background-color: #45a049;
+  }
+  
+  .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #555;
+  }
+ 
