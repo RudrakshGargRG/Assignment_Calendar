@@ -9,7 +9,7 @@ const Calendar = () => {
   const currentMonthRef = useRef(null);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedMonth, setSelectedMonth] = useState(currentDate.getMonth());
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState({});
 
   useEffect(() => {
     // Scroll to the current month upon initial load
@@ -27,36 +27,54 @@ const Calendar = () => {
   const handleMonthChange = (e) => {
     const selectedMonth = parseInt(e.target.value, 10);
     const currentYear = currentDate.getFullYear();
-    const selectedYear = selectedMonth >= currentDate.getMonth() ? currentYear : currentYear + 1;
-
+  
+    // Calculate the options dynamically based on the rendered months
+    const renderedMonths = Array.from({ length: 13 }).map((_, index) => {
+      const monthOffset = index - 6;
+      return new Date(currentYear, selectedMonth + monthOffset, 1);
+    });
+  
+    // Check if the selected month is in the current rendered months
+    const selectedYear = renderedMonths[selectedMonth].getFullYear();
+  
     setSelectedMonth(selectedMonth);
     setSelectedDate(new Date(selectedYear, selectedMonth, 1));
   };
 
+  const getMonthIdentifier = (date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1; // Adding 1 because getMonth() returns a zero-based index
+    return `${year}-${month.toString().padStart(2, '0')}`;
+  };
+
   const renderDaysInMonth = (monthOffset) => {
     const monthDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + monthOffset, 1);
+    const monthIdentifier = getMonthIdentifier(monthDate);
     const startingDayIndex = monthDate.getDay();
     const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + monthOffset + 1, 0).getDate();
     const days = Array.from({ length: startingDayIndex + daysInMonth }, (_, dayIndex) => dayIndex + 1 - startingDayIndex);
+  
     const handleDeleteEvent = (eventToDelete) => {
-        const updatedEvents = events.filter((event) => event !== eventToDelete);
-        setEvents(updatedEvents);
-      };
-
+      // Update events using the month identifier
+      const updatedEvents = { ...events };
+      updatedEvents[monthIdentifier] = updatedEvents[monthIdentifier].filter((event) => event !== eventToDelete);
+      setEvents(updatedEvents);
+    };
+  
     return (
       <div className="days">
         {days.map((day) => (
-        <Day
+          <Day
             key={day}
             isCurrentDay={isCurrentDay(monthOffset, day)}
             day={day}
-            month = {monthDate.getMonth()}
-            year = {monthDate.getFullYear()}
-            events={getEventsForDay(monthOffset, day)}
+            month={monthDate.getMonth()}
+            year={monthDate.getFullYear()}
+            events={getEventsForDay(monthIdentifier, day)}
             onEventClick={(event) => handleEventClick(event)}
-            onAddEvent={(title) => handleAddEvent(day, title)}
+            onAddEvent={(title) => handleAddEvent(monthIdentifier, day, title)}
             onDeleteEvent={handleDeleteEvent}
-        />
+          />
         ))}
       </div>
     );
@@ -65,20 +83,24 @@ const Calendar = () => {
   const isCurrentDay = (monthOffset, day) =>
     currentDate.getMonth() + monthOffset === currentDate.getMonth() && currentDate.getDate() === day;
 
-  const getEventsForDay = (monthOffset, day) => {
-    const date = new Date(currentDate.getFullYear(), currentDate.getMonth() + monthOffset, day);
-    return events.filter((event) => isSameDay(event.date, date));
-  };
+    const getEventsForDay = (monthIdentifier, day) => {
+        const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
+        return events[monthIdentifier]?.filter((event) => isSameDay(event.date, date)) || [];
+      };
 
   const handleEventClick = (event) => {
     // Handle event click (e.g., show event details, allow deletion)
     console.log('Event clicked:', event);
   };
 
-  const handleAddEvent = (day, title) => {
+  const handleAddEvent = (monthIdentifier, day, title) => {
     const date = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
     const newEvent = { date, title };
-    setEvents((prevEvents) => [...prevEvents, newEvent]);
+  
+    // Update events using the month identifier
+    const updatedEvents = { ...events };
+    updatedEvents[monthIdentifier] = [...(updatedEvents[monthIdentifier] || []), newEvent];
+    setEvents(updatedEvents);
   };
 
   const handleDeleteEvent = (eventToDelete) => {
