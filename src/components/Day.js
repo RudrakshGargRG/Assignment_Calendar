@@ -2,12 +2,11 @@
 import React, { useState } from 'react';
 import EventModal from './EventModal';
 
-const Day = ({ isCurrentDay, day, events, onEventClick, onAddEvent, onDeleteEvent }) => {
+const Day = ({ isCurrentDay, day, month, year, events, onEventClick, onAddEvent, onDeleteEvent }) => {
   const [showEventModal, setShowEventModal] = useState(false);
 
   const handleDayClick = () => {
-    console.log("abc")
-    setShowEventModal(true);
+    if(day>0) setShowEventModal(true);
   };
 
   console.log(showEventModal);
@@ -18,6 +17,8 @@ const Day = ({ isCurrentDay, day, events, onEventClick, onAddEvent, onDeleteEven
       {showEventModal && (
         <EventModal
           day={day}
+          month={month}
+          year={year}
           events={events}
           onClose={() => setShowEventModal(false)}
           onEventClick={onEventClick}

@@ -8,6 +8,7 @@ const Calendar = () => {
   const currentDate = new Date();
   const currentMonthRef = useRef(null);
   const [selectedDate, setSelectedDate] = useState(null);
+  const [selectedMonth, setSelectedMonth] = useState(currentDate.getMonth());
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
@@ -15,22 +16,33 @@ const Calendar = () => {
     if (currentMonthRef.current) {
       currentMonthRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
     }
-  }, []);
+  }, [selectedMonth]);
 
-  const isCurrentMonth = (monthOffset) => currentDate.getMonth() + monthOffset === currentDate.getMonth();
+  const isCurrentMonth = (monthOffset) => currentDate.getMonth() + monthOffset === selectedMonth;
+  const getMonthName = (monthIndex) => {
+    const monthDate = new Date(currentDate.getFullYear(), monthIndex, 1);
+    return monthDate.toLocaleDateString('default', { month: 'long' });
+  };
 
- 
+  const handleMonthChange = (e) => {
+    const selectedMonth = parseInt(e.target.value, 10);
+    const currentYear = currentDate.getFullYear();
+    const selectedYear = selectedMonth >= currentDate.getMonth() ? currentYear : currentYear + 1;
+
+    setSelectedMonth(selectedMonth);
+    setSelectedDate(new Date(selectedYear, selectedMonth, 1));
+  };
+
   const renderDaysInMonth = (monthOffset) => {
     const monthDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + monthOffset, 1);
     const startingDayIndex = monthDate.getDay();
     const daysInMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + monthOffset + 1, 0).getDate();
     const days = Array.from({ length: startingDayIndex + daysInMonth }, (_, dayIndex) => dayIndex + 1 - startingDayIndex);
     const handleDeleteEvent = (eventToDelete) => {
-        // Filter out the event to delete
         const updatedEvents = events.filter((event) => event !== eventToDelete);
         setEvents(updatedEvents);
       };
-      
+
     return (
       <div className="days">
         {days.map((day) => (
@@ -38,6 +50,8 @@ const Calendar = () => {
             key={day}
             isCurrentDay={isCurrentDay(monthOffset, day)}
             day={day}
+            month = {monthDate.getMonth()}
+            year = {monthDate.getFullYear()}
             events={getEventsForDay(monthOffset, day)}
             onEventClick={(event) => handleEventClick(event)}
             onAddEvent={(title) => handleAddEvent(day, title)}
@@ -80,7 +94,23 @@ const Calendar = () => {
 
   return (
     <div className="calendar-container">
-      <h1>Custom Scrollable Calendar</h1>
+
+        <div className='header1'>
+            {/* <h1>Event Calendar</h1> */}
+            <div>
+            <label htmlFor="monthSelect">Select Month: </label>
+            <select id="monthSelect" value={selectedMonth} onChange={handleMonthChange}>
+            {Array.from({ length: 12 }).map((_, index) => (
+                <option key={index} value={index}>
+                {getMonthName(index)}
+                </option>
+            ))}
+            </select>
+            </div>
+      </div>
+      
+
+
       <div className="calendar">
         {Array.from({ length: 13 }).map((_, index) => {
           const monthOffset = index - 6;
@@ -94,7 +124,7 @@ const Calendar = () => {
               currentMonthRef={isCurrentMonth(monthOffset) ? currentMonthRef : null}
               weekdays={['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']}
               renderDaysInMonth={renderDaysInMonth(monthOffset)}
-              
+              onDeleteEvent={handleDeleteEvent}
             />
           );
         })}
@@ -104,3 +134,4 @@ const Calendar = () => {
 };
 
 export default Calendar;
+

@@ -1,7 +1,7 @@
-// src/components/EventModal.js
 import React, { useState } from 'react';
+import '../styles/EventModal.css'; // Make sure to import your EventModal styles
 
-const EventModal = ({ day, events, onClose, onEventClick, onAddEvent, onDeleteEvent }) => {
+const EventModal = ({ day, month, year, events, onClose, onEventClick, onAddEvent, onDeleteEvent }) => {
   const [eventTitle, setEventTitle] = useState('');
 
   const handleAddEvent = () => {
@@ -18,21 +18,21 @@ const EventModal = ({ day, events, onClose, onEventClick, onAddEvent, onDeleteEv
   return (
     <div className="event-modal">
       <div className="event-modal-content">
-        
-        <h2>Events on {day}</h2>
+        <h2>Events on {day}-{month}-{year}</h2>
         
         {events.length === 0 ? (
           <p>No events for this day</p>
         ) : (
           <ol>
-          {events.map((event, index) => (
-            <li key={index} onClick={() => onEventClick(event)}>
-              {event.title}
-              <button onClick={() => handleDeleteEvent(event)}>Delete</button>
-            </li>
-          ))}
-      </ol>
+            {events.map((event, index) => (
+              <li key={index} onClick={() => onEventClick(event)}>
+                <span>{event.title}</span>
+                <button onClick={() => handleDeleteEvent(event)}>Delete</button>
+              </li>
+            ))}
+          </ol>
         )}
+
         <div className="add-event">
           <label>Add Event:</label>
           <input
@@ -41,8 +41,9 @@ const EventModal = ({ day, events, onClose, onEventClick, onAddEvent, onDeleteEv
             onChange={(e) => setEventTitle(e.target.value)}
           />
           <button onClick={handleAddEvent}>Add Event</button>
-          <button className="close" onClick={(e)=>{onClose(); e.stopPropagation();}}>x</button>
         </div>
+
+        <button className="close" onClick={(e) => { onClose(); e.stopPropagation(); }}>x</button>
       </div>
     </div>
   );

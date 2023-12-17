@@ -26,3 +26,4 @@ const getMonthName = (monthIndex) => {
 };
 
 export default Month;
+

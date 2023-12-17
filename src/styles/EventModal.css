@@ -1,0 +1,92 @@
+
+.event-modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    width: 80%;
+    max-width: 500px;
+    margin: auto;
+  }
+  
+  
+  .event-modal-content {
+    display: flex;
+    flex-direction: column;
+  } 
+  
+  .event-modal h2 {
+    margin-bottom: 10px;
+  }
+  
+  .event-modal ol {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .event-modal li {
+    margin-bottom: 10px;
+    cursor: pointer;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+  }
+  
+  .event-modal button {
+    background-color: #ff5c5c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-left: 5px;
+  }
+  
+  .event-modal button:hover {
+    background-color: #ff3333;
+  }
+  
+  .add-event {
+    margin-top: 20px;
+  }
+  
+  .add-event label {
+    display: block;
+    margin-bottom: 5px;
+  }
+  
+  .add-event input {
+    width: 80%;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .add-event button {
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
+  .add-event button:hover {
+    background-color: #45a049;
+  }
+  
+  .close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 18px;
+    color: #555;
+  }
+  
